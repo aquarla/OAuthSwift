@@ -28,10 +28,19 @@ extension Dictionary {
         var parts = [String]()
 
         for (key, value) in self {
-            let keyString = "\(key)".urlEncoded
-            let valueString = "\(value)".urlEncoded
-            let query = "\(keyString)=\(valueString)"
-            parts.append(query)
+            if let values = value as? [String] {
+                values.forEach { v in
+                    let keyString = "\(key)[]".urlEncoded
+                    let valueString = "\(v)".urlEncoded
+                    let query = "\(keyString)=\(valueString)"
+                    parts.append(query)
+                }
+            } else {
+                let keyString = "\(key)".urlEncoded
+                let valueString = "\(value)".urlEncoded
+                let query = "\(keyString)=\(valueString)"
+                parts.append(query)
+            }
         }
 
         return parts.joined(separator: "&")
